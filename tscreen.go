@@ -109,7 +109,7 @@ type tScreen struct {
 }
 
 func (t *tScreen) Init() error {
-	t.evch = make(chan Event, 10)
+	t.evch = make(chan Event, 1024)
 	t.indoneq = make(chan struct{})
 	t.keychan = make(chan []byte, 10)
 	t.keytimer = time.NewTimer(time.Millisecond * 50)
@@ -385,8 +385,8 @@ outer:
 func (t *tScreen) Fini() {
 	t.Lock()
 	defer t.Unlock()
-	
-	ti := t.ti	
+
+	ti := t.ti
 	t.cells.Resize(0, 0)
 	t.TPuts(ti.ShowCursor)
 	t.TPuts(ti.AttrOff)
@@ -405,7 +405,7 @@ func (t *tScreen) Fini() {
 	default:
 		close(t.quit)
 	}
-	
+
 	t.termioFini()
 }
 
